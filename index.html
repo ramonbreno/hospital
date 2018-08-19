@@ -1,0 +1,148 @@
+</!DOCTYPE html>
+<html lang="pt-br" ng-app="paciente" ng-controller="PacienteController as pacienteController">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>Atendimento Hospitalar</title>
+    <link rel="icon" href="assets/icon/logo-bemol.png">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Atendimento Hospitalar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <!--<a class="nav-item nav-link active" href="#">Calcular<span class="sr-only">(current)</span></a>-->
+            </div>
+        </div>
+    </nav>
+</header>
+<section>
+    <div class="container">
+        <div class="row mt-3 mb-3">
+
+            <div class="input-group mb-3 col-md-4">
+                <input type="text" class="form-control" placeholder="Filtrar" aria-label="Filtrar" aria-describedby="basic-addon1" ng-model="pesquisa">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+            <div class="text-right col-md-8">
+                <button class="btn btn-primary" role="alert" type="button" data-toggle="modal" data-target="#exampleModal2" data-whatever="@mdo" ng-click="pacienteController.carregarFormEdit('','','','','cadastrar')">Cadastrar Paciente</button>
+            </div>
+        </div>
+
+        <span class="alert alert-warning" ng-show="pacienteController.messageCarregamento.length > 0">{{pacienteController.messageCarregamento}}</span>
+
+        <table class="table mt-4">
+            <thead>
+
+            <tr>
+                <th>CPF</th>
+                <th>Nome</th>
+                <th>Data de nascimento</th>
+                <th>Acões</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="paciente in pacienteController.valores | filter : pesquisa">
+            <tr>
+                <td>{{paciente['cpf']}}</td>
+                <td>{{paciente['nome']}}</td>
+                <td>{{paciente['data_nasc']}}</td>
+                <td>
+                    <button class="btn btn-info" type="button" data-toggle="modal" data-target="#exampleModal2" ng-click="pacienteController.carregarFormEdit(paciente['id'],paciente['cpf'],paciente['nome'],paciente['data_nasc'],'editar')">Editar</button>
+                    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#exampleModal" ng-click="pacienteController.atualizarID(paciente['id'])">Excuir</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</section>
+<!-- Modal para excluir-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Alerta!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir paciente?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" ng-click="pacienteController.excluirPaciente()">Sim</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para cadastrar-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">Formulário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form ng-submit="pacienteController.enviarFormularioPaciente()">
+                    <input type="hidden" ng-model="pacienteController.acao">
+                    <div class="form-group">
+                        <label for="recipient-cpf" class="col-form-label">CPF:</label>
+                        <input type="text" class="form-control" onfocus="true" id="recipient-cpf" placeholder="CPF" ng-keyup="pacienteController.consultarCpf()" ng-model="pacienteController.cpf" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" mask="999.999.999-99" mask-restrict="reject" required>
+                        <span class="mt-3">
+                            <p class="text-danger">{{pacienteController.consultaCpf}}</p>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-nome" class="col-form-label">Nome:</label>
+                        <input type="text" class="form-control" id="recipient-nome" placeholder="Nome" maxlength="40" ng-model="pacienteController.nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data-nasc" class="col-form-label">Data de nascimento:</label>
+                        <input type="date" class="form-control" id="data-nasc" placeholder="Data de nascimento" ng-model="pacienteController.datanasc" required>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" id="fecharCadastro" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <address class="mx-auto mt-5" style="width: 300px">&copy; 2018 - Todos os direitos reservados!</address>
+    </div>
+</footer>
+</body>
+
+<script src="node_modules/angular/angular.min.js"></script>
+<script src="assets/js/ngmask.min.js" type="text/javascript"></script>
+<script src="app/modules/paciente.module.js"></script>
+<script src="app/controllers/paciente.controller.js"></script>
+
+</html>
